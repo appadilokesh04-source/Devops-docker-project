@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mysql:8
+    container_name: prod-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: blog_db
+    volumes:
+      - prod_mysql_data:/var/lib/mysql
+
+  web:
+    image: appadilokesh/devops-docker-project:f4de83c0665b5e93eec9f7a9d0bf2b692fd17045   # We will replace with SHA later
+    container_name: prod-web
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: blog_db
+    ports:
+      - "5005:5000"
+
+volumes:
+  prod_mysql_data:
